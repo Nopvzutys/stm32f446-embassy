@@ -1,0 +1,56 @@
+[package]
+edition = "2021"
+name = "stm32f446-embassy"
+version = "0.1.0"
+license = "MIT"
+publish = false
+
+[dependencies.defmt]
+version = "1.0.1"
+
+[dependencies.defmt-rtt]
+version = "1.0.0"
+
+[dependencies.embassy-stm32]
+version = "0.4.0"
+features = ["defmt", "stm32f446re", "memory-x", "time-driver-tim4", "exti"]
+
+[dependencies.embassy-executor]
+version = "0.9.1"
+features = ["arch-cortex-m", "executor-thread", "executor-interrupt", "defmt"]
+
+[dependencies.embassy-time]
+version = "0.5.0"
+features = ["defmt", "defmt-timestamp-uptime", "tick-hz-32_768"]
+
+[dependencies.embassy-futures]
+version = "0.1.2"
+
+[dependencies.cortex-m]
+version = "0.7.7"
+features = ["inline-asm", "critical-section-single-core"]
+
+[dependencies.cortex-m-rt]
+version = "0.7.5"
+
+[dependencies.panic-probe]
+version = "1.0.0"
+features = ["print-defmt"]
+
+[profile.dev]
+opt-level = 0              # No optimization for your crate (enables easier debugging)
+debug = 2                  # Enable debug info for your crate
+debug-assertions = true    # Enable debug assertions for your crate
+
+[profile.dev.package."*"]  # Apply these settings to all dependencies
+opt-level = "z"            # Full optimization for dependencies
+debug = 2
+debug-assertions = false   # Disable debug assertions for dependencies
+
+[profile.release]
+opt-level = "z"            # Optimize for the smallest code size. "s" is an alternative that balances size and speed.
+lto = true                 # Enable Link Time Optimization, which can remove dead code and reduce size.
+codegen-units = 1          # Reduce code generation units to 1 for maximum optimization, potentially increasing compile time.
+panic = "abort"            # Use 'abort' instead of 'unwind' for panic handling, reducing binary size.
+debug = 2
+# strip = "debuginfo"        # Remove debug information from the binary.
